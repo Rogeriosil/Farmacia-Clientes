@@ -1,40 +1,29 @@
 # Farmacia-Clientes
 Sistema de gerenciamento de clientes com CRUD usando HTML, JavaScript e json-server
 
+Sistema de Clientes — Farmácia (CRUD)
 📌 Sobre o projeto
 
-Este projeto é um sistema web de cadastro de clientes para uma farmácia.
-A aplicação permite:
+Neste projeto desenvolvi um sistema web de cadastro de clientes para uma farmácia, com foco em organização, clareza de código e simulação de um cenário real de sistema.
 
-✅ Listar clientes cadastrados
+A aplicação permite cadastrar, listar, buscar e excluir clientes, consumindo uma API REST simulada com json-server. O objetivo foi praticar consumo de API, manipulação do DOM e boas práticas em JavaScript puro.
 
-✅ Cadastrar novo cliente
+🧰 Tecnologias utilizadas
 
-✅ Buscar cliente pelo nome
+HTML5 — estrutura da aplicação
 
-✅ Excluir cliente
+CSS3 — estilização da interface
 
-O front-end foi desenvolvido com HTML, CSS e JavaScript puro, e o back-end é simulado com json-server, fornecendo uma API REST local.
+JavaScript (Vanilla JS) — lógica do sistema
 
-🧰 Tecnologias usadas
+json-server — simulação de back-end / API REST
 
-HTML5 (estrutura da página)
+Fetch API — comunicação com a API
 
-CSS3 (estilização)
-
-JavaScript (Vanilla JS) (lógica do sistema)
-
-json-server (API REST simulada)
-
-Fetch API (consumo de API)
-
-Async/Await (controle de requisições assíncronas)
+Async/Await — controle de operações assíncronas
 
 📁 Estrutura do projeto
-
-Exemplo de estrutura (pode ajustar de acordo com o seu ZIP):
-
-/projeto-farmacia
+projeto-farmacia/
 │
 ├── index.html
 ├── css/
@@ -44,193 +33,160 @@ Exemplo de estrutura (pode ajustar de acordo com o seu ZIP):
 └── db.json
 
 
-index.html → interface do sistema (inputs, botões, lista)
+index.html → estrutura da interface
 
-style.css → estilos básicos (margens, fonte, espaçamento)
+style.css → estilos e layout
 
-script.js → lógica do CRUD (GET/POST/DELETE + busca)
+script.js → regras de negócio e lógica do CRUD
 
-db.json → “banco de dados” usado pelo json-server
+db.json → base de dados utilizada pelo json-server
 
-▶️ Como rodar o projeto (passo a passo)
-1) Instalar o json-server
-
-No terminal:
-
+▶️ Como executar o projeto
+1️⃣ Instalar o json-server
 npm install -g json-server
 
-2) Iniciar a API simulada com o db.json
-
-Dentro da pasta do projeto:
-
+2️⃣ Iniciar a API simulada
 json-server --watch db.json --port 3000
 
 
-✅ Isso cria a API em:
+A API ficará disponível em:
 
 http://localhost:3000/clientes
 
-3) Abrir o front-end
+3️⃣ Abrir o front-end
 
-Abra o index.html no navegador
+Abrir o arquivo index.html no navegador.
 
-🌐 Endpoints da API (json-server)
+🌐 Endpoints utilizados
 
-A coleção principal é clientes.
+GET /clientes → lista todos os clientes
 
-GET /clientes → listar todos os clientes
+POST /clientes → cadastra um novo cliente
 
-POST /clientes → cadastrar cliente
+DELETE /clientes/:id → remove um cliente pelo ID
 
-DELETE /clientes/:id → deletar cliente por id
+Esses endpoints simulam o funcionamento de uma API REST real.
 
-Exemplo:
-
-GET http://localhost:3000/clientes
-
-DELETE http://localhost:3000/clientes/1
-
-🧠 Lógica do sistema (explicação professor)
-✅ Constantes principais
+🧠 Lógica da aplicação (explicação técnica)
+📌 Variável de configuração
 API_URL
 const API_URL = "http://localhost:3000/clientes"
 
 
-Define o endereço base da API.
-📌 Tudo que o sistema faz (listar, cadastrar, deletar) acontece usando essa URL.
+Essa constante define o endereço base da API. Todas as requisições do sistema utilizam essa URL.
 
-📌 Funções do projeto (função por função)
-1) carregarClientes()
+📌 Funções do sistema
+carregarClientes()
 
-📌 Objetivo: buscar clientes na API e mostrar na tela.
+Essa função é responsável por buscar os clientes cadastrados na API e exibi-los na interface.
 
 Fluxo:
 
-Faz fetch(API_URL) → busca lista de clientes
+Realiza uma requisição GET usando fetch
 
-Converte resposta em JSON
+Converte a resposta para JSON
 
-Chama renderizar(clientes) para exibir no HTML
+Envia os dados para a função renderizarClientes()
 
-Pontos importantes:
+Utilizo async/await para garantir que os dados sejam carregados antes da renderização.
 
-async + await garantem que o código espere a resposta antes de continuar.
+renderizarClientes(clientes)
 
-2) renderizar(clientes)
-
-📌 Objetivo: desenhar os clientes na tela dentro da <ul id="lista">.
+Essa função cuida exclusivamente da atualização da interface.
 
 O que ela faz:
 
-Seleciona a lista com document.getElementById("lista")
+Limpa a lista atual de clientes
 
-Limpa a lista com lista.innerHTML = ""
+Percorre o array recebido
 
-Para cada cliente:
+Cria dinamicamente os elementos HTML (li, button)
 
-cria um <li>
+Insere os dados na tela
 
-adiciona nome + email
+A separação dessa função facilita manutenção e evita duplicação de código.
 
-adiciona botão Excluir chamando deletarCliente(id)
+adicionarCliente()
 
-Insere no HTML com appendChild
+Essa função é responsável pelo cadastro de novos clientes.
 
-📌 Por que limpar antes?
-Para evitar duplicar os clientes na tela a cada atualização.
+Passos:
 
-3) adicionarCliente()
+Captura os valores dos inputs
 
-📌 Objetivo: cadastrar um novo cliente na API com POST.
+Valida se os campos não estão vazios
 
-Fluxo correto:
+Envia os dados para a API usando POST
 
-Lê nome e email dos inputs
+Limpa os campos do formulário
 
-Valida se não estão vazios
+Atualiza a lista chamando carregarClientes()
 
-Envia POST:
+Essa validação evita o envio de dados inconsistentes.
 
-method: "POST"
+deletarCliente(id)
 
-headers com JSON
-
-body com JSON.stringify({ nome, email })
-
-Limpa inputs
-
-Recarrega lista chamando carregarClientes()
-
-✅ Validação importante
-Se nome/email estiverem vazios, mostra alert e interrompe com return.
-
-⚠️ Observação (importante no README):
-No seu código original, o fetch POST pode ter ficado fora da função por erro de chave { }.
-O certo é que todo o POST fique dentro de adicionarCliente().
-
-4) deletarCliente(id)
-
-📌 Objetivo: remover cliente pelo id usando DELETE.
+Essa função remove um cliente específico.
 
 Fluxo:
 
-Faz:
+Envia uma requisição DELETE para o endpoint /clientes/:id
 
-fetch(`${API_URL}/${id}`, { method: "DELETE" })
+Após a exclusão, atualiza a lista automaticamente
 
+Esse comportamento garante sincronização entre front-end e back-end.
 
-Recarrega a lista com carregarClientes()
+buscarCliente()
 
-📌 Assim que o servidor apaga, a UI atualiza.
+Essa função permite filtrar clientes pelo nome.
 
-5) buscarCliente()
+Funcionamento:
 
-📌 Objetivo: filtrar clientes por nome.
-
-Fluxo:
-
-Lê o valor do input #search
+Lê o valor digitado no campo de busca
 
 Busca todos os clientes na API
 
-Se termo estiver vazio:
+Filtra o resultado usando includes() e toLowerCase()
 
-mostra todos (renderizar(clientes))
+Renderiza apenas os clientes correspondentes
 
-Se tiver termo:
+Essa abordagem garante que o filtro seja feito sempre sobre os dados atualizados.
 
-filtra com:
-
-clientes.filter(c => c.nome.toLowerCase().includes(termo))
-
-
-Renderiza somente filtrados
-
-📌 Por que buscar na API antes?
-Para sempre filtrar a lista mais atual.
-
-6) Inicialização
+🚀 Inicialização da aplicação
 carregarClientes();
 
 
-📌 Quando o site abre, já lista os clientes automaticamente.
+Ao abrir o site, a lista de clientes é carregada automaticamente.
 
-✅ O que eu aprendi / habilidades demonstradas (ótimo para portfólio)
+✅ Conceitos aplicados no projeto
 
-Consumo de API REST com Fetch API
+Consumo de API REST
 
-Operações CRUD:
-
-GET (listar)
-
-POST (criar)
-
-DELETE (remover)
-
-Uso de async/await
+Operações CRUD (GET, POST, DELETE)
 
 Manipulação do DOM
 
-Validação de formulário
+Validação de formulários
 
-Organização de código por responsabilidades (UI vs lógica)
+Organização de código
+
+Separação de responsabilidades
+
+Programação assíncrona com JavaScript
+
+📌 Possíveis melhorias futuras
+
+Implementação de edição de cliente (PUT / PATCH)
+
+Validação de email mais robusta
+
+Tratamento de erros com try/catch
+
+Feedback visual de sucesso/erro
+
+Paginação de resultados
+
+Integração com back-end real
+
+📎 Observação
+Este projeto foi desenvolvido com foco em aprendizado e simulação de um sistema real. Para uso em produção, seria necessária a implementação de um back-end seguro e validações adicionais.
