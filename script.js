@@ -11,7 +11,6 @@ async function carregarClientes() {
 
 // =========================
 // RENDERIZAR LISTA
-// (sem crase/innerHTML complexo, do seu jeito)
 // =========================
 function renderizar(clientes) {
   const lista = document.getElementById("lista");
